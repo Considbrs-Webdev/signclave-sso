@@ -4,7 +4,7 @@ Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.1.19
+Stable tag: 0.1.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ These four filters are the public extension API (signatures will not change in p
 `signclave_sso_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
+
+= 0.1.20 =
+* Plugin Check: WordPress options, query parameters, AJAX, user meta, cron, and transients use the `signclave_sso_` prefix. Existing `sls_options` are still read until the first save.
 
 = 0.1.19 =
 * Plugin Check: global constants use the `SIGNCLAVE_SSO_` prefix.
