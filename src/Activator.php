@@ -32,8 +32,9 @@ final class Activator
     public static function scheduleLogPrune(): void
     {
         wp_clear_scheduled_hook('sls_prune_logs');
-        if (!wp_next_scheduled('sc_prune_logs')) {
-            wp_schedule_event(time(), 'daily', 'sc_prune_logs');
+        wp_clear_scheduled_hook('sc_prune_logs');
+        if (!wp_next_scheduled('signclave_sso_prune_logs')) {
+            wp_schedule_event(time(), 'daily', 'signclave_sso_prune_logs');
         }
     }
 

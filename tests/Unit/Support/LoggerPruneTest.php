@@ -46,7 +46,7 @@ it('removes log lines older than the retention window', function () {
     $stored = $options->defaults();
     $stored['general']['log_file'] = $log;
     $stored['general']['audit_log_file'] = $audit;
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
 
     $dir = trailingslashit(sys_get_temp_dir()) . 'signclave-sso';
     wp_mkdir_p($dir);

@@ -37,7 +37,7 @@ it('never treats an empty password as a successful bind', function () {
     $stored['ldap']['base_dn'] = 'ou=users,o=example';
     $stored['ldap']['bind_user'] = 'cn=ldap-service,ou=ldap,ou=system,o=example';
     $stored['ldap']['bind_password_encrypted'] = $options->encryptSecret('bind-secret');
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
     $options = new Options();
     $users = new UserManager(new RoleMapper($options), new Logger($options), $options, new FrozenClock(1));
     $auth = new Authenticator(

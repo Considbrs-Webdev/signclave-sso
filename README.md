@@ -307,12 +307,12 @@ signclave-sso/
 
 ## Configuration
 
-Settings live under **Settings → Signclave SSO** (`options-general.php?page=sc-settings`).
+Settings live under **Settings → Signclave SSO** (`options-general.php?page=signclave-sso`).
 
 - **SAML:** IdP Entity ID, SSO URL (the plugin sends an HTTP-POST AuthnRequest), primary/secondary X.509, attribute names (`uid`, `mail`, `givenName`, `sn`, `groups` by default). Assertions must be signed. Transient NameID is rejected; unspecified/email/persistent are accepted when the value is stable.
 - **LDAP (optional):** Off by default. When enabled and fully configured, a **new** WordPress user is created only after a directory lookup. Existing accounts can still sign in via SAML if LDAP is down. Prefer `ldaps://` on port 636.
 - **Roles:** One mapping per line: `source|group|role`. Role downgrade is on by default. Protected logins and last-admin cannot lose `administrator` via SSO.
-- **Emergency login:** `?password=1&sc_key=…` under Security. Rotate the key after use. Only local WordPress accounts (not `sc_source` saml/ldap) may use it.
+- **Emergency login:** `?password=1&signclave_sso_key=…` under Security. Rotate the key after use. Only local WordPress accounts (not `signclave_sso_source` saml/ldap) may use it.
 
 ## Further Documentation
 

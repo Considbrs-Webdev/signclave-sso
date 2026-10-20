@@ -49,7 +49,7 @@ final class SettingsPage
     {
         add_action('admin_menu', [$this, 'menu']);
         add_action('admin_init', [$this, 'registerSetting']);
-        add_action('admin_post_sc_download_metadata', [$this, 'handleMetadataDownload']);
+        add_action('admin_post_signclave_sso_download_metadata', [$this, 'handleMetadataDownload']);
         add_action('added_option', [$this, 'forgetLegacyOptions']);
         add_action('updated_option', [$this, 'forgetLegacyOptions']);
     }
@@ -60,7 +60,7 @@ final class SettingsPage
     public function registerSetting(): void
     {
         register_setting(
-            'sc',
+            'signclave_sso',
             $this->options->optionKey(),
             [
                 'type' => 'array',
@@ -72,7 +72,7 @@ final class SettingsPage
     }
 
     /**
-     * Drop sls_options once WordPress has stored sc_options.
+     * Drop sls_options once WordPress has stored signclave_sso_options.
      *
      * @param string $option Option name that was just added or updated.
      */
@@ -93,7 +93,7 @@ final class SettingsPage
             __('Signclave – SSO for SAML and LDAP', 'signclave-sso'),
             __('Signclave SSO', 'signclave-sso'),
             'manage_options',
-            'sc-settings',
+            'signclave-sso',
             [$this, 'renderPage']
         );
     }
@@ -119,8 +119,8 @@ final class SettingsPage
                 'metadata_xml' => $this->metadata->buildSpMetadataXml(),
                 'metadata_url' => $this->metadata->spMetadataUrl(),
                 'metadata_download' => wp_nonce_url(
-                    admin_url('admin-post.php?action=sc_download_metadata'),
-                    'sc_download_metadata'
+                    admin_url('admin-post.php?action=signclave_sso_download_metadata'),
+                    'signclave_sso_download_metadata'
                 ),
                 'recent_acs_failures' => $this->logger->getRecentAuditEntries(3),
                 'mappings_text' => $this->mappingsToText($options['roles']['mappings']),
@@ -152,11 +152,11 @@ final class SettingsPage
         $existing = $this->options->getAll();
         $posted = is_array($input) ? $input : [];
         $new = array_replace_recursive($existing, $posted);
-        // phpcs:disable WordPress.Security.NonceVerification -- Settings API verifies the sc-options nonce before this callback.
+        // phpcs:disable WordPress.Security.NonceVerification -- Settings API verifies the signclave_sso nonce before this callback.
         $optionPage = isset($_POST['option_page'])
             ? sanitize_text_field(wp_unslash((string) $_POST['option_page']))
             : '';
-        $fromSettingsForm = 'sc' === $optionPage;
+        $fromSettingsForm = 'signclave_sso' === $optionPage;
 
         if ($fromSettingsForm) {
             $new['general']['auto_sso'] = !empty($posted['general']['auto_sso']);
@@ -169,8 +169,8 @@ final class SettingsPage
             $new['ldap']['enabled'] = !empty($posted['ldap']['enabled']);
             $new['ldap']['allow_insecure_ldap'] = !empty($posted['ldap']['allow_insecure_ldap']);
 
-            $rotateKey = isset($_POST['sc_regenerate_bypass_key'])
-                ? sanitize_text_field(wp_unslash((string) $_POST['sc_regenerate_bypass_key']))
+            $rotateKey = isset($_POST['signclave_sso_regenerate_bypass_key'])
+                ? sanitize_text_field(wp_unslash((string) $_POST['signclave_sso_regenerate_bypass_key']))
                 : '';
             if ('' !== $rotateKey) {
                 $new['general']['password_bypass_key'] = wp_generate_password(32, false, false);
@@ -183,15 +183,15 @@ final class SettingsPage
             }
 
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- bind password must not pass sanitize_text_field.
-            $bindPlain = isset($_POST['sc_bind_password']) ? (string) wp_unslash($_POST['sc_bind_password']) : '';
+            $bindPlain = isset($_POST['signclave_sso_bind_password']) ? (string) wp_unslash($_POST['signclave_sso_bind_password']) : '';
             if ('' !== $bindPlain) {
                 $new['ldap']['bind_password_encrypted'] = $this->options->encryptSecret($bindPlain);
             } else {
                 $new['ldap']['bind_password_encrypted'] = (string) ($existing['ldap']['bind_password_encrypted'] ?? '');
             }
 
-            $mappingsText = isset($_POST['sc_role_mappings'])
-                ? sanitize_textarea_field(wp_unslash((string) $_POST['sc_role_mappings']))
+            $mappingsText = isset($_POST['signclave_sso_role_mappings'])
+                ? sanitize_textarea_field(wp_unslash((string) $_POST['signclave_sso_role_mappings']))
                 : '';
             $new['roles']['mappings'] = $this->parseMappings($mappingsText);
 
@@ -215,7 +215,7 @@ final class SettingsPage
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('Unauthorized.', 'signclave-sso'));
         }
-        check_admin_referer('sc_download_metadata');
+        check_admin_referer('signclave_sso_download_metadata');
 
         $host = (string) wp_parse_url(home_url(), PHP_URL_HOST);
         $filename = sanitize_file_name(('' !== $host ? $host : 'sp') . '-saml-metadata.xml');

@@ -24,7 +24,7 @@ it('records wrapping as a signed assertion plus an unsigned sibling', function (
 it('rejects wrapping at ACS even when the signed assertion verifies', function () {
     $factory = new HandlerFactory();
     $factory->seedOptions();
-    set_transient('sc_req_' . md5('_req1'), 1, 300);
+    set_transient('signclave_sso_req_' . md5('_req1'), 1, 300);
     $_POST['SAMLResponse'] = base64_encode(scSecurityFixture('dual-assertion.xml'));
     try {
         $factory->processAcs($factory->make());
@@ -45,7 +45,7 @@ it('does not collapse NameID across XML comments after verification', function (
 it('rejects comment injection in uid AttributeValue at ACS', function () {
     $factory = new HandlerFactory();
     $factory->seedOptions();
-    set_transient('sc_req_' . md5('_req1'), 1, 300);
+    set_transient('signclave_sso_req_' . md5('_req1'), 1, 300);
     $_POST['SAMLResponse'] = base64_encode(scSecurityFixture('comment-uid.xml'));
     try {
         $factory->processAcs($factory->make());
@@ -80,7 +80,7 @@ it('rejects oversized SAMLResponse before decode in the Handler', function () {
     $factory->seedOptions(['general' => ['saml_response_max_bytes' => 100]]);
     $_POST['SAMLResponse'] = str_repeat('A', 101);
     $_SERVER['REQUEST_METHOD'] = 'POST';
-    $_GET['sc_saml'] = 'acs';
+    $_GET['signclave_sso_saml'] = 'acs';
     try {
         $factory->make()->handleSamlRoutes();
         expect(false)->toBeTrue('Expected ACS rejection');

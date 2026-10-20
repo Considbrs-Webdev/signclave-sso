@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_response1" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?sc_saml=acs">
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_response1" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?signclave_sso_saml=acs">
   <saml:Issuer>https://idp.example.test/realms/test</saml:Issuer>
   <samlp:Status>
     <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
@@ -9,7 +9,7 @@
   <saml:Subject>
     <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">alice</saml:NameID>
     <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-      <saml:SubjectConfirmationData NotOnOrAfter="2024-06-15T13:00:00Z" Recipient="https://sp.example.test/?sc_saml=acs" InResponseTo="_req1"/>
+      <saml:SubjectConfirmationData NotOnOrAfter="2024-06-15T13:00:00Z" Recipient="https://sp.example.test/?signclave_sso_saml=acs" InResponseTo="_req1"/>
     </saml:SubjectConfirmation>
   </saml:Subject>
   <saml:Conditions NotBefore="2024-06-15T11:59:00Z" NotOnOrAfter="2024-06-15T13:00:00Z">

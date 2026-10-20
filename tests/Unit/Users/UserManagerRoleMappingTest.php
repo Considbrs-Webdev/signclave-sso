@@ -17,7 +17,7 @@ function scRoleManager(array $general = [], array $mappings = []): UserManager
     $stored = $options->defaults();
     $stored['general'] = array_merge($stored['general'], $general);
     $stored['roles']['mappings'] = $mappings;
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
     $options = new Options();
 
     return new UserManager(new RoleMapper($options), new Logger($options), $options, new FrozenClock(1));
@@ -59,7 +59,7 @@ it('downgrades a managed role when the group is gone', function () {
     $user->user_login = 'alice';
     $user->roles = ['editor'];
     UserStore::put($user);
-    UserStore::setMeta($user->ID, 'sc_managed_roles', ['editor']);
+    UserStore::setMeta($user->ID, 'signclave_sso_managed_roles', ['editor']);
     $manager = scRoleManager(['role_downgrade' => true], [
         ['source' => 'any', 'group' => 'editors', 'role' => 'editor'],
     ]);
@@ -74,7 +74,7 @@ it('keeps the administrator role for a protected login', function () {
     $user->user_login = 'admin';
     $user->roles = ['administrator'];
     UserStore::put($user);
-    UserStore::setMeta($user->ID, 'sc_managed_roles', ['administrator']);
+    UserStore::setMeta($user->ID, 'signclave_sso_managed_roles', ['administrator']);
     $manager = scRoleManager(
         ['role_downgrade' => true, 'protected_logins' => "admin\n"],
         [['source' => 'any', 'group' => 'editors', 'role' => 'editor']]
@@ -90,7 +90,7 @@ it('refuses to drop the last administrator', function () {
     $user->user_login = 'only-admin';
     $user->roles = ['administrator'];
     UserStore::put($user);
-    UserStore::setMeta($user->ID, 'sc_managed_roles', ['administrator']);
+    UserStore::setMeta($user->ID, 'signclave_sso_managed_roles', ['administrator']);
     $manager = scRoleManager(['role_downgrade' => true], []);
 
     $result = $manager->applyRoleMapping($user, [], 'saml');

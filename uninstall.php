@@ -9,11 +9,12 @@ defined( 'ABSPATH' ) || exit;
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 ( static function (): void {
+	wp_clear_scheduled_hook( 'signclave_sso_prune_logs' );
 	wp_clear_scheduled_hook( 'sc_prune_logs' );
 	wp_clear_scheduled_hook( 'sls_prune_logs' );
 
 	$generals = array();
-	foreach ( array( 'sc_options', 'sls_options' ) as $option_key ) {
+	foreach ( array( 'signclave_sso_options', 'sls_options', 'sc_options' ) as $option_key ) {
 		$stored = get_option( $option_key, array() );
 		if ( is_array( $stored ) && isset( $stored['general'] ) && is_array( $stored['general'] ) ) {
 			$generals[] = $stored['general'];
@@ -23,14 +24,19 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 	global $wpdb;
 	if ( $wpdb instanceof wpdb ) {
-		$like_transient = $wpdb->esc_like( '_transient_sc_' ) . '%';
-		$like_timeout   = $wpdb->esc_like( '_transient_timeout_sc_' ) . '%';
+		$likes = array();
+		foreach ( array( 'signclave_sso_', 'sc_' ) as $prefix ) {
+			$likes[] = $wpdb->esc_like( '_transient_' . $prefix ) . '%';
+			$likes[] = $wpdb->esc_like( '_transient_timeout_' . $prefix ) . '%';
+		}
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- uninstall must drop all plugin transients.
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-				$like_transient,
-				$like_timeout
+				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s",
+				$likes[0],
+				$likes[1],
+				$likes[2],
+				$likes[3]
 			)
 		);
 	}

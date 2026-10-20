@@ -14,7 +14,7 @@ it('locks after N failures and clears on success', function () {
     $stored['general']['bypass_limit'] = 2;
     $stored['general']['bypass_window_seconds'] = 900;
     $stored['general']['bypass_lockout_seconds'] = 1800;
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
     $limiter = new RateLimiter(new Options());
 
     expect($limiter->isLocked('password_bypass', 'alice', '1.1.1.1'))->toBeFalse();

@@ -159,7 +159,7 @@ beforeEach(function () {
 });
 
 it('binds a first SAML login to an existing local account with the same username', function () {
-    OptionStore::seed(['sc_options' => []]);
+    OptionStore::seed(['signclave_sso_options' => []]);
     $local = new WP_User();
     $local->user_login = 'alice';
     $local->user_email = 'alice@example.test';
@@ -180,12 +180,12 @@ it('binds a first SAML login to an existing local account with the same username
 
     expect($result)->toBeInstanceOf(WP_User::class)
         ->and($result->ID)->toBe($local->ID)
-        ->and(UserStore::getMeta($local->ID, 'sc_nameid'))->toBe('nameid-1')
-        ->and(UserStore::getMeta($local->ID, 'sc_source'))->toBe('saml');
+        ->and(UserStore::getMeta($local->ID, 'signclave_sso_nameid'))->toBe('nameid-1')
+        ->and(UserStore::getMeta($local->ID, 'signclave_sso_source'))->toBe('saml');
 });
 
 it('requires a NameID value', function () {
-    OptionStore::seed(['sc_options' => []]);
+    OptionStore::seed(['signclave_sso_options' => []]);
     $options = new Options();
     $manager = new UserManager(new RoleMapper($options), new Logger($options), $options, new FrozenClock(1));
 
@@ -196,7 +196,7 @@ it('requires a NameID value', function () {
 });
 
 it('finds the same user on a second login when email and name changed', function () {
-    OptionStore::seed(['sc_options' => []]);
+    OptionStore::seed(['signclave_sso_options' => []]);
     $options = new Options();
     $manager = new UserManager(new RoleMapper($options), new Logger($options), $options, new FrozenClock(1));
 
@@ -210,13 +210,13 @@ it('finds the same user on a second login when email and name changed', function
 });
 
 it('rejects a username match when the account already has a different NameID', function () {
-    OptionStore::seed(['sc_options' => []]);
+    OptionStore::seed(['signclave_sso_options' => []]);
     $existing = new WP_User();
     $existing->user_login = 'dana';
     $existing->user_email = 'dana@example.test';
     UserStore::put($existing);
-    UserStore::setMeta($existing->ID, 'sc_nameid', 'other-nameid');
-    UserStore::setMeta($existing->ID, 'sc_source', 'saml');
+    UserStore::setMeta($existing->ID, 'signclave_sso_nameid', 'other-nameid');
+    UserStore::setMeta($existing->ID, 'signclave_sso_source', 'saml');
 
     $options = new Options();
     $manager = new UserManager(new RoleMapper($options), new Logger($options), $options, new FrozenClock(1));
@@ -227,7 +227,7 @@ it('rejects a username match when the account already has a different NameID', f
 });
 
 it('does not bind SAML identity by email when the username is different', function () {
-    OptionStore::seed(['sc_options' => []]);
+    OptionStore::seed(['signclave_sso_options' => []]);
     $existing = new WP_User();
     $existing->user_login = 'eve';
     $existing->user_email = 'shared@example.test';
@@ -248,5 +248,5 @@ it('does not bind SAML identity by email when the username is different', functi
     expect($result)->toBeInstanceOf(WP_User::class)
         ->and($result->ID)->not->toBe($existing->ID)
         ->and($result->user_login)->toBe('frank')
-        ->and(UserStore::getMeta($existing->ID, 'sc_nameid'))->toBe('');
+        ->and(UserStore::getMeta($existing->ID, 'signclave_sso_nameid'))->toBe('');
 });

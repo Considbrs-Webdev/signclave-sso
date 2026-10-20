@@ -138,10 +138,10 @@ final class Handler
             '.sc-sso-login{width:320px;max-width:100%;margin:16px auto 0}#login .sc-sso-login{width:100%;margin-left:0;margin-right:0}.sc-sso-login .button{display:block;width:100%;box-sizing:border-box;float:none;height:auto;text-align:center}'
         );
 
-        wp_register_script('sc-login-sso', false, [], (string) config('app.version'), true);
-        wp_enqueue_script('sc-login-sso');
+        wp_register_script('signclave-sso-login', false, [], (string) config('app.version'), true);
+        wp_enqueue_script('signclave-sso-login');
         wp_add_inline_script(
-            'sc-login-sso',
+            'signclave-sso-login',
             'var scForm=document.getElementById("loginform");var scBtn=document.getElementById("sc-sso-login");if(scForm&&scBtn){scForm.insertAdjacentElement("afterend",scBtn);}'
         );
     }
@@ -177,7 +177,7 @@ final class Handler
     }
 
     /**
-     * Dispatch ?sc_saml= login, ACS, or metadata routes.
+     * Dispatch ?signclave_sso_saml= login, ACS, or metadata routes.
      */
     public function handleSamlRoutes(): void
     {
@@ -212,7 +212,7 @@ final class Handler
         }
 
         $requestId = '_' . wp_generate_password(22, false, false);
-        set_transient('sc_req_' . md5($requestId), 1, (int) $this->options->get('general', 'saml_request_ttl_seconds', 300));
+        set_transient('signclave_sso_req_' . md5($requestId), 1, (int) $this->options->get('general', 'saml_request_ttl_seconds', 300));
 
         $acsUrl = $this->acsUrl();
         $issue = $this->clock->formatGmt('Y-m-d\TH:i:s\Z');
@@ -361,7 +361,7 @@ final class Handler
         }
 
         $responseId = $this->xpathString($xp, '/*[local-name()="Response"]/@ID');
-        $replayKey = 'sc_replay_' . md5($responseId);
+        $replayKey = 'signclave_sso_replay_' . md5($responseId);
         if ('' === $responseId || get_transient($replayKey)) {
             throw new InvalidAssertion(
                 AuthFailureReason::ReplayBlocked,
@@ -741,7 +741,7 @@ final class Handler
                 break;
             }
 
-            $requestKey = 'sc_req_' . md5($inResponseTo);
+            $requestKey = 'signclave_sso_req_' . md5($inResponseTo);
             if (! get_transient($requestKey)) {
                 continue;
             }
@@ -862,7 +862,7 @@ final class Handler
     private function buildLoginUrl(): string
     {
         return add_query_arg(
-            'sc_saml',
+            'signclave_sso_saml',
             'login',
             wp_login_url($this->requestedRedirectTarget())
         );
@@ -873,11 +873,11 @@ final class Handler
      */
     private function samlRouteParam(): string
     {
-        if (empty($_GET['sc_saml'])) {
+        if (empty($_GET['signclave_sso_saml'])) {
             return '';
         }
 
-        return sanitize_text_field(wp_unslash((string) $_GET['sc_saml']));
+        return sanitize_text_field(wp_unslash((string) $_GET['signclave_sso_saml']));
     }
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Signclave\Settings\Options;
 use Signclave\Tests\Support\OptionStore;
 
-it('reads sls_options until the first update writes sc_options', function () {
+it('reads sls_options until the first update writes signclave_sso_options', function () {
     $options = new Options();
     $cipher = $options->encryptSecret('bind-secret');
     OptionStore::seed([
@@ -23,11 +23,11 @@ it('reads sls_options until the first update writes sc_options', function () {
     expect($options->get('general', 'auto_sso'))->toBeFalse()
         ->and($options->get('general', 'log_file'))->toBe('sls-old.log')
         ->and($options->decryptSecret($cipher))->toBe('bind-secret')
-        ->and(get_option('sc_options', false))->toBeFalse();
+        ->and(get_option('signclave_sso_options', false))->toBeFalse();
 
     $options->update($options->getAll());
 
-    $stored = get_option('sc_options', false);
+    $stored = get_option('signclave_sso_options', false);
     expect($stored)->toBeArray()
         ->and(get_option('sls_options', false))->toBeFalse()
         ->and($stored['general']['auto_sso'])->toBeFalse()

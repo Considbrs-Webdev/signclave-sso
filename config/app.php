@@ -10,5 +10,5 @@ return array(
 	'name'       => 'signclave-sso',
 	'textdomain' => 'signclave-sso',
 	'version'    => defined( 'SIGNCLAVE_SSO_VERSION' ) ? SIGNCLAVE_SSO_VERSION : '0.0.0',
-	'option_key' => 'sc_options',
+	'option_key' => 'signclave_sso_options',
 );

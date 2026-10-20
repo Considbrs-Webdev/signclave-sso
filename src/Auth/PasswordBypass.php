@@ -13,10 +13,10 @@ use Signclave\Support\RateLimiter;
 use WP_Error;
 use WP_User;
 
-// phpcs:disable WordPress.Security.NonceVerification -- Emergency URL uses sc_key (compared with hash_equals), not a WP nonce.
+// phpcs:disable WordPress.Security.NonceVerification -- Emergency URL uses signclave_sso_key (compared with hash_equals), not a WP nonce.
 
 /**
- * Emergency local login: wp-login.php?password=1&sc_key=...
+ * Emergency local login: wp-login.php?password=1&signclave_sso_key=...
  *
  * WordPress posts the login form to wp-login.php without query args, so the
  * bypass flag and key are also echoed as hidden fields and accepted from POST.
@@ -58,7 +58,7 @@ final class PasswordBypass
             return false;
         }
 
-        $providedKey = $this->requestValue('sc_key');
+        $providedKey = $this->requestValue('signclave_sso_key');
         if ('' === $providedKey) {
             return false;
         }
@@ -81,7 +81,7 @@ final class PasswordBypass
         }
 
         echo '<input type="hidden" name="password" value="1" />';
-        echo '<input type="hidden" name="sc_key" value="' . esc_attr($key) . '" />';
+        echo '<input type="hidden" name="signclave_sso_key" value="' . esc_attr($key) . '" />';
     }
 
     /**
@@ -113,7 +113,7 @@ final class PasswordBypass
             return $user;
         }
 
-        $source = (string) get_user_meta($user->ID, 'sc_source', true);
+        $source = (string) get_user_meta($user->ID, 'signclave_sso_source', true);
         if (in_array($source, ['ldap', 'saml'], true)) {
             $this->rateLimiter->recordFailure('password_bypass', $username, $ip);
 
@@ -138,7 +138,7 @@ final class PasswordBypass
         return add_query_arg(
             [
                 'password' => '1',
-                'sc_key' => $key,
+                'signclave_sso_key' => $key,
             ],
             wp_login_url()
         );

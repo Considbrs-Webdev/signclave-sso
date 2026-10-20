@@ -80,10 +80,10 @@ it('forces unchecked checkboxes to false when saving the settings form', functio
     $stored['general']['auto_sso'] = true;
     $stored['general']['password_bypass_key'] = 'kept-bypass-key-32-chars-xxxxxx';
     $stored['ldap']['enabled'] = true;
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
 
-    $_POST['option_page'] = 'sc';
-    $_POST['sc_role_mappings'] = '';
+    $_POST['option_page'] = 'signclave_sso';
+    $_POST['signclave_sso_role_mappings'] = '';
 
     $result = scSettingsPage()->sanitizeOptions([
         'general' => [
@@ -102,11 +102,11 @@ it('keeps the stored bind secret when the password field is empty', function () 
     $stored = $options->defaults();
     $stored['general']['password_bypass_key'] = 'kept-bypass-key-32-chars-xxxxxx';
     $stored['ldap']['bind_password_encrypted'] = $secret;
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
 
-    $_POST['option_page'] = 'sc';
-    $_POST['sc_bind_password'] = '';
-    $_POST['sc_role_mappings'] = '';
+    $_POST['option_page'] = 'signclave_sso';
+    $_POST['signclave_sso_bind_password'] = '';
+    $_POST['signclave_sso_role_mappings'] = '';
 
     $result = scSettingsPage()->sanitizeOptions([
         'ldap' => [

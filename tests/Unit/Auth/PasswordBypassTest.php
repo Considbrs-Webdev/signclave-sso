@@ -83,7 +83,7 @@ beforeEach(function () {
 
 it('rejects a near-correct emergency key using hash_equals semantics', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => [
                 'password_bypass_key' => 'abcdefghijklmnopqrstuvwxyz012345',
             ],
@@ -94,20 +94,20 @@ it('rejects a near-correct emergency key using hash_equals semantics', function 
     $bypass = new PasswordBypass($options, new RateLimiter($options));
 
     $_GET['password'] = '1';
-    $_GET['sc_key'] = 'abcdefghijklmnopqrstuvwxyz012346';
+    $_GET['signclave_sso_key'] = 'abcdefghijklmnopqrstuvwxyz012346';
     $_POST = [];
 
     expect($bypass->isPasswordBypassRequest())->toBeFalse();
 
-    $_GET['sc_key'] = 'abcdefghijklmnopqrstuvwxyz012345';
+    $_GET['signclave_sso_key'] = 'abcdefghijklmnopqrstuvwxyz012345';
     expect($bypass->isPasswordBypassRequest())->toBeTrue();
 
-    unset($_GET['password'], $_GET['sc_key']);
+    unset($_GET['password'], $_GET['signclave_sso_key']);
 });
 
 it('accepts bypass credentials from POST hidden fields', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => [
                 'password_bypass_key' => 'secret-emergency-key-32chars!!',
                 'bypass_limit' => 2,
@@ -120,28 +120,28 @@ it('accepts bypass credentials from POST hidden fields', function () {
 
     $_GET = [];
     $_POST['password'] = '1';
-    $_POST['sc_key'] = 'secret-emergency-key-32chars!!';
+    $_POST['signclave_sso_key'] = 'secret-emergency-key-32chars!!';
 
     expect($bypass->isPasswordBypassRequest())->toBeTrue();
 
-    unset($_POST['password'], $_POST['sc_key']);
+    unset($_POST['password'], $_POST['signclave_sso_key']);
 });
 
 it('rejects SSO-managed accounts on the emergency login', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => ['password_bypass_key' => 'secret-emergency-key-32chars!!'],
         ],
     ]);
     $user = new WP_User();
     $user->user_login = 'alice';
     Signclave\Tests\Support\UserStore::put($user);
-    Signclave\Tests\Support\UserStore::setMeta($user->ID, 'sc_source', 'saml');
+    Signclave\Tests\Support\UserStore::setMeta($user->ID, 'signclave_sso_source', 'saml');
 
     $options = new Options();
     $bypass = new PasswordBypass($options, new RateLimiter($options));
     $_GET['password'] = '1';
-    $_GET['sc_key'] = 'secret-emergency-key-32chars!!';
+    $_GET['signclave_sso_key'] = 'secret-emergency-key-32chars!!';
 
     $result = $bypass->enforceLocalAccountOnly($user, 'alice');
     expect($result)->toBeInstanceOf(WP_Error::class)
@@ -150,7 +150,7 @@ it('rejects SSO-managed accounts on the emergency login', function () {
 
 it('returns Locked when the rate limiter is engaged', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => [
                 'password_bypass_key' => 'secret-emergency-key-32chars!!',
                 'bypass_limit' => 1,
@@ -162,7 +162,7 @@ it('returns Locked when the rate limiter is engaged', function () {
     $limiter->recordFailure('password_bypass', 'alice', '');
     $bypass = new PasswordBypass($options, $limiter);
     $_GET['password'] = '1';
-    $_GET['sc_key'] = 'secret-emergency-key-32chars!!';
+    $_GET['signclave_sso_key'] = 'secret-emergency-key-32chars!!';
 
     $result = $bypass->enforceLocalAccountOnly(new WP_User(), 'alice');
     expect($result)->toBeInstanceOf(WP_Error::class)

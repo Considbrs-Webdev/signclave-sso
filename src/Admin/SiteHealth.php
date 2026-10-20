@@ -43,19 +43,19 @@ final class SiteHealth
      */
     public function registerTests(array $tests): array
     {
-        $tests['direct']['sc_idp_cert'] = [
+        $tests['direct']['signclave_sso_idp_cert'] = [
             'label' => __('Signclave SSO: IdP certificate', 'signclave-sso'),
             'test' => [$this, 'testIdpCertificate'],
         ];
-        $tests['direct']['sc_ldap_tls'] = [
+        $tests['direct']['signclave_sso_ldap_tls'] = [
             'label' => __('Signclave SSO: LDAP TLS', 'signclave-sso'),
             'test' => [$this, 'testLdapTls'],
         ];
-        $tests['direct']['sc_https'] = [
+        $tests['direct']['signclave_sso_https'] = [
             'label' => __('Signclave SSO: HTTPS', 'signclave-sso'),
             'test' => [$this, 'testHttps'],
         ];
-        $tests['direct']['sc_ldap_configured'] = [
+        $tests['direct']['signclave_sso_ldap_configured'] = [
             'label' => __('Signclave SSO: LDAP configuration', 'signclave-sso'),
             'test' => [$this, 'testLdapConfigured'],
         ];
@@ -125,7 +125,7 @@ final class SiteHealth
 
         if ('good' === $worst) {
             return $this->result(
-                'sc_idp_cert',
+                'signclave_sso_idp_cert',
                 'good',
                 __('IdP certificates are valid.', 'signclave-sso'),
                 '<p>' . esc_html__('Pinned IdP certificates are present and not expiring within 30 days.', 'signclave-sso') . '</p>'
@@ -133,7 +133,7 @@ final class SiteHealth
         }
 
         return $this->result(
-            'sc_idp_cert',
+            'signclave_sso_idp_cert',
             $worst,
             __('IdP certificate needs attention.', 'signclave-sso'),
             '<p>' . esc_html(implode(' ', $issues)) . '</p>'
@@ -150,7 +150,7 @@ final class SiteHealth
         $ldap = $this->options->getAll()['ldap'];
         if (empty($ldap['enabled'])) {
             return $this->result(
-                'sc_ldap_tls',
+                'signclave_sso_ldap_tls',
                 'good',
                 __('LDAP is not enabled.', 'signclave-sso'),
                 '<p>' . esc_html__('LDAP fallback is off; TLS for the directory is not required.', 'signclave-sso') . '</p>'
@@ -167,7 +167,7 @@ final class SiteHealth
 
         if ([] === $plain || !empty($ldap['allow_insecure_ldap'])) {
             return $this->result(
-                'sc_ldap_tls',
+                'signclave_sso_ldap_tls',
                 'good',
                 __('LDAP hosts use TLS or insecure LDAP is explicitly allowed.', 'signclave-sso'),
                 '<p>' . esc_html__('Directory hosts are ldaps://, or “Allow ldap://” is enabled for a lab environment.', 'signclave-sso') . '</p>'
@@ -175,7 +175,7 @@ final class SiteHealth
         }
 
         return $this->result(
-            'sc_ldap_tls',
+            'signclave_sso_ldap_tls',
             'recommended',
             __('LDAP is enabled without ldaps://.', 'signclave-sso'),
             '<p>' . esc_html__('Use ldaps:// (or enable StartTLS on ldap://). Plaintext ldap:// without “Allow ldap://” will fail in production.', 'signclave-sso') . '</p>'
@@ -191,7 +191,7 @@ final class SiteHealth
     {
         if (is_ssl()) {
             return $this->result(
-                'sc_https',
+                'signclave_sso_https',
                 'good',
                 __('WordPress sees this request as HTTPS.', 'signclave-sso'),
                 '<p>' . esc_html__('Secure cookies and ACS URLs can be generated correctly.', 'signclave-sso') . '</p>'
@@ -200,7 +200,7 @@ final class SiteHealth
 
         if (!empty($this->options->get('general', 'trust_proxy_headers', false))) {
             return $this->result(
-                'sc_https',
+                'signclave_sso_https',
                 'good',
                 __('HTTPS is not detected locally; proxy headers are trusted.', 'signclave-sso'),
                 '<p>' . esc_html__('Confirm the reverse proxy strips client-supplied X-Forwarded-* headers.', 'signclave-sso') . '</p>'
@@ -208,7 +208,7 @@ final class SiteHealth
         }
 
         return $this->result(
-            'sc_https',
+            'signclave_sso_https',
             'recommended',
             __('WordPress does not see HTTPS.', 'signclave-sso'),
             '<p>' . esc_html__('Auth cookies may be marked insecure and the ACS URL may be http://. Terminate TLS at the web server, or enable “Trust proxy HTTPS headers” only behind a trusted reverse proxy.', 'signclave-sso') . '</p>'
@@ -224,7 +224,7 @@ final class SiteHealth
     {
         if (!$this->options->isLdapEnabled()) {
             return $this->result(
-                'sc_ldap_configured',
+                'signclave_sso_ldap_configured',
                 'good',
                 __('LDAP is not enabled.', 'signclave-sso'),
                 '<p>' . esc_html__('SAML runs without directory verification.', 'signclave-sso') . '</p>'
@@ -233,7 +233,7 @@ final class SiteHealth
 
         if ($this->options->isLdapUsable()) {
             return $this->result(
-                'sc_ldap_configured',
+                'signclave_sso_ldap_configured',
                 'good',
                 __('LDAP is configured.', 'signclave-sso'),
                 '<p>' . esc_html__('Host, base DN, bind user, and bind secret are present. Use diagnostics or `wp signclave test-ldap` for a live bind.', 'signclave-sso') . '</p>'
@@ -241,7 +241,7 @@ final class SiteHealth
         }
 
         return $this->result(
-            'sc_ldap_configured',
+            'signclave_sso_ldap_configured',
             'recommended',
             __('LDAP is enabled but incomplete.', 'signclave-sso'),
             '<p>' . esc_html__('Fill in hosts, base DN, bind user, and bind password, or disable LDAP.', 'signclave-sso') . '</p>'

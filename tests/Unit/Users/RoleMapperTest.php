@@ -12,7 +12,7 @@ function scMapper(array $mappings, string $strategy = 'highest'): RoleMapper
     $stored = $options->defaults();
     $stored['roles']['mappings'] = $mappings;
     $stored['general']['role_strategy'] = $strategy;
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
 
     return new RoleMapper(new Options());
 }

@@ -37,7 +37,7 @@ it('serves well-formed SP metadata from the lab', function () {
         skip('Set SC_E2E=1 after starting saml-dev and the WordPress lab.');
     }
 
-    $xml = scE2eFetch('/?sc_saml=metadata');
+    $xml = scE2eFetch('/?signclave_sso_saml=metadata');
     expect($xml)->not->toBeFalse()
         ->and($xml)->toContain('EntityDescriptor')
         ->and($xml)->toContain('AssertionConsumerService')
@@ -49,7 +49,7 @@ it('starts SSO with an HTTP-POST AuthnRequest form', function () {
         skip('Set SC_E2E=1 after starting saml-dev and the WordPress lab.');
     }
 
-    $html = scE2eFetch('/?sc_saml=login');
+    $html = scE2eFetch('/?signclave_sso_saml=login');
     expect($html)->not->toBeFalse()
         ->and(strtolower((string) $html))->toContain('samlrequest')
         ->and(strtolower((string) $html))->toContain('method="post"');

@@ -65,7 +65,7 @@ final class UserManager
             return null;
         }
 
-        return $this->usersByMeta('sc_nameid', $nameId);
+        return $this->usersByMeta('signclave_sso_nameid', $nameId);
     }
 
     /**
@@ -216,7 +216,7 @@ final class UserManager
     /**
      * Apply group-to-role mappings, optionally revoking roles that no longer match.
      *
-     * Only roles this plugin granted (tracked in `sc_managed_roles`) are ever
+     * Only roles this plugin granted (tracked in `signclave_sso_managed_roles`) are ever
      * revoked, and never in a way that leaves the site without an administrator.
      *
      * @param WP_User      $user   User to update.
@@ -518,7 +518,7 @@ final class UserManager
      */
     private function readUserMeta(int $userId, string $suffix): mixed
     {
-        return get_user_meta($userId, 'sc_' . $suffix, true);
+        return get_user_meta($userId, 'signclave_sso_' . $suffix, true);
     }
 
     /**
@@ -526,7 +526,7 @@ final class UserManager
      */
     private function writeUserMeta(int $userId, string $suffix, mixed $value): void
     {
-        update_user_meta($userId, 'sc_' . $suffix, $value);
+        update_user_meta($userId, 'signclave_sso_' . $suffix, $value);
     }
 
     /**

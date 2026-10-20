@@ -42,7 +42,7 @@ function buildResponse(array $opts): string
     $responseId = (string) ($opts['responseId'] ?? '_response1');
     $issuer = (string) ($opts['issuer'] ?? 'https://idp.example.test/realms/test');
     $audience = (string) ($opts['audience'] ?? 'https://sp.example.test/');
-    $destination = (string) ($opts['destination'] ?? 'https://sp.example.test/?sc_saml=acs');
+    $destination = (string) ($opts['destination'] ?? 'https://sp.example.test/?signclave_sso_saml=acs');
     $recipient = (string) ($opts['recipient'] ?? $destination);
     $inResponseTo = array_key_exists('inResponseTo', $opts) ? (string) $opts['inResponseTo'] : '_req1';
     $status = (string) ($opts['status'] ?? 'urn:oasis:names:tc:SAML:2.0:status:Success');
@@ -220,8 +220,8 @@ writeFixture($dir, 'wrong-audience.xml', signXml(buildResponse([
 ]), $privateKey, 'assertion'));
 
 writeFixture($dir, 'wrong-destination.xml', signXml(buildResponse([
-    'destination' => 'https://evil.example.test/?sc_saml=acs',
-    'recipient' => 'https://evil.example.test/?sc_saml=acs',
+    'destination' => 'https://evil.example.test/?signclave_sso_saml=acs',
+    'recipient' => 'https://evil.example.test/?signclave_sso_saml=acs',
 ]), $privateKey, 'assertion'));
 
 writeFixture($dir, 'status-responder.xml', signXml(buildResponse([
@@ -285,7 +285,7 @@ XML);
 writeFixture($dir, 'keycloak-lab-structure.xml', <<<XML
 <?xml version="1.0"?>
 <!-- Structural reference only: Keycloak-shaped Response. Signature is not valid. -->
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_lab" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?sc_saml=acs">
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_lab" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?signclave_sso_saml=acs">
   <saml:Issuer>https://idp.example.test/realms/test</saml:Issuer>
   <samlp:Status><samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/></samlp:Status>
   <saml:Assertion ID="_lab-assertion" Version="2.0" IssueInstant="2024-06-15T12:00:00Z">

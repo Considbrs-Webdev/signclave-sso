@@ -38,7 +38,7 @@ This plugin follows WordPress and OWASP-oriented practices:
 
 * SAML signatures verified only against the configured IdP X.509 certificate (pinned).
 * Strict SAML validation (audience, destination, issuer, InResponseTo) enabled by default.
-* Emergency local login requires a secret key (`?password=1&sc_key=...`), not a public flag.
+* Emergency local login requires a secret key (`?password=1&signclave_sso_key=...`), not a public flag.
 * Proxy HTTPS headers are ignored unless explicitly enabled.
 * Account linking by email is off by default.
 * LDAP bind passwords encrypted at rest (AES-256-GCM).
@@ -51,7 +51,7 @@ This plugin follows WordPress and OWASP-oriented practices:
 
 = Where are the settings? =
 
-**Settings → Signclave SSO** (`options-general.php?page=sc-settings`). There is no top-level admin menu.
+**Settings → Signclave SSO** (`options-general.php?page=signclave-sso`). There is no top-level admin menu.
 
 = How do local WordPress admins log in when SSO is enabled? =
 

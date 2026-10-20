@@ -11,7 +11,7 @@ Taken from **Settings → Signclave SSO** after the site URL is final:
 | SP field | Plugin source |
 | --- | --- |
 | Entity ID | `saml.sp_entity_id` (default `site_url('/')`) |
-| Assertion Consumer Service (ACS) | `/?sc_saml=acs` (HTTPS) |
+| Assertion Consumer Service (ACS) | `/?signclave_sso_saml=acs` (HTTPS) |
 | WantAssertionsSigned | **true** (plugin metadata advertises this; unsigned assertions are rejected) |
 | NameIDFormat | unspecified (plugin metadata; see NameID below) |
 

@@ -13,5 +13,5 @@ it( 'returns default for unknown keys', function () {
 } );
 
 it( 'reads option_key', function () {
-	expect( config( 'app.option_key' ) )->toBe( 'sc_options' );
+	expect( config( 'app.option_key' ) )->toBe( 'signclave_sso_options' );
 } );

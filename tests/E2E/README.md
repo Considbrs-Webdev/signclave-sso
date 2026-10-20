@@ -11,9 +11,9 @@ These tests are **manual / opt-in**. They are not run in GitHub Actions in this 
 ## Scenarios (checklist)
 
 - Homepage responds.
-- `/?sc_saml=metadata` returns well-formed SP `EntityDescriptor` XML.
-- `/?sc_saml=login` returns an HTTP-POST AuthnRequest form (`SAMLRequest`).
-- Full round-trip: `?sc_saml=login` → Keycloak → ACS → logged-in user with the mapped role (manual).
+- `/?signclave_sso_saml=metadata` returns well-formed SP `EntityDescriptor` XML.
+- `/?signclave_sso_saml=login` returns an HTTP-POST AuthnRequest form (`SAMLRequest`).
+- Full round-trip: `?signclave_sso_saml=login` → Keycloak → ACS → logged-in user with the mapped role (manual).
 - Wrong IdP certificate configured → login rejected, reason in the audit log.
 - LDAP StartTLS / `ldaps://` against the lab OpenLDAP.
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_response1" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?sc_saml=acs">
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_response1" Version="2.0" IssueInstant="2024-06-15T12:00:00Z" Destination="https://sp.example.test/?signclave_sso_saml=acs">
   <saml:Issuer>https://idp.example.test/realms/test</saml:Issuer>
   <samlp:Status>
     <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
@@ -9,7 +9,7 @@
   <saml:Subject>
     <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">alice</saml:NameID>
     <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-      <saml:SubjectConfirmationData NotOnOrAfter="2024-06-15T11:00:00Z" Recipient="https://sp.example.test/?sc_saml=acs" InResponseTo="_req1"/>
+      <saml:SubjectConfirmationData NotOnOrAfter="2024-06-15T11:00:00Z" Recipient="https://sp.example.test/?signclave_sso_saml=acs" InResponseTo="_req1"/>
     </saml:SubjectConfirmation>
   </saml:Subject>
   <saml:Conditions NotBefore="2024-06-15T10:00:00Z" NotOnOrAfter="2024-06-15T11:00:00Z">
@@ -37,7 +37,7 @@
 <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
   <ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
     <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-  <ds:Reference URI="#_assertion1"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>JZvahgZum6lq/qEobOZIsJKk4TbfIT4reewJ64tDF3M=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>EGEhRf7qminSlfW+UiXxm6HWECk+E6wSZADC0JKDJ/Ec60pgc4GLwMXhpPVwx3XK++utIAq6euOSGE6zqNffqR5knyuA6QZ+dbuXiDNFpnbOc1defNf8QWD+pg6V8yreQyZPYKTwIyPPseSf6jIl3tRhLwiojU2Wb+PgMsh1aYyp70BD0bcU1tn9iH0aLz8LuPgmg0eL5cAuhzKeyqXa+GO112SXxRyDx4F6S//jD3K77+6ldadWE7PLHuTU+crCTl8LaqO6HthklLfrr7MIG3LzY5+3rdn6mhTwqO7N9NkJ9Vk6eFcINOzeEy9JlfZb9SSKINDC4i3XE+r5DtQaYQ==</ds:SignatureValue>
+  <ds:Reference URI="#_assertion1"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>U7lhlRLbHAS9o85A/tkMqb48aYKxqfeGGNpwCc2mh4g=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>HKe1VJYO9vMoHNmgu/6vOQh+jwwa+o+moqa1knF2M49dAj/Jg4hAwb9gEpZt/iS8ze7ytVgvgQCpIkpdpgUiI7fmnYyxsYpiDA/qFpo1mnpdar3fNH4t9faetXxoQu+e3CtTzkQv9Qgqx835e6Q/T5oScnUKn2/gOx4o/ZAfZIc2JQuz0yImo2WdwtqKSVuts2ID8ejxgKIfM54bNvNHST8oK+56Ox/W0g69zvk8udY5y3QjF1Bvk5QPiWmXsBIXt9k9YCN64bu7DTUwJw44JiVrNMAZRgjE4Kz8/DedZrFyzubAPGjsnWRwixy9Ok2mEDBSS+qZfqQQzWz5OP175g==</ds:SignatureValue>
 </ds:Signature></saml:Assertion>
   
 </samlp:Response>

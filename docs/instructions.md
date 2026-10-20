@@ -38,11 +38,11 @@ Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../REA
 - Automatisk SSO av: WordPress-formuläret visas, plus knappen **Logga in med SSO** under formuläret om IdP är konfigurerad.
 - LDAP är valfritt (av som standard). Utan katalog räcker SAML; befintliga WP-konton matchas på `user_login` mot SAML-`uid` vid första inloggningen. Därefter är `NameID` identiteten.
 - Med LDAP på och fullt konfigurerat krävs katalogträff bara för att **skapa** nya konton. Befintliga WP-konton kan logga in via SAML även om katalogen är nere.
-- SAML-identitet binds till IdP:ns `NameID` (`sc_nameid` i user meta) efter första inloggningen. Namn/e-post uppdaterar profil men avgör inte vem.
-- Okänt NameID mot ett konto som redan har ett annat `sc_nameid` → `nameid_collision`. E-post räcker inte för SAML-bindning.
-- Lokal lösenordsinloggning: nöd-URL under Security (`?password=1&sc_key=...`).
+- SAML-identitet binds till IdP:ns `NameID` (`signclave_sso_nameid` i user meta) efter första inloggningen. Namn/e-post uppdaterar profil men avgör inte vem.
+- Okänt NameID mot ett konto som redan har ett annat `signclave_sso_nameid` → `nameid_collision`. E-post räcker inte för SAML-bindning.
+- Lokal lösenordsinloggning: nöd-URL under Security (`?password=1&signclave_sso_key=...`).
 - **Nöd-URL:en är känslig** (access-loggar, Referer). Rotera nyckeln via knappen under Security efter användning/läcka.
-- Bypass tillåter bara rena lokala WP-konton (inte `sc_source` saml/ldap).
+- Bypass tillåter bara rena lokala WP-konton (inte `signclave_sso_source` saml/ldap).
 
 ## 6) Säkerhetsnoteringar
 - Signaturvalidering via xmlseclibs ≥ 3.1.4 (CVE-2025-66475-patchad), prefixad för att undvika krockar.
@@ -55,7 +55,7 @@ Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../REA
 ## 7) Loggar (Nginx)
 - Katalog: `uploads/signclave-sso/`
 - Filnamn: `sc-<slump>.log` och `sc-audit-<slump>.log` (sparade i options).
-- Retention: **Log retention** under Security (standard 90 dagar, 7–730). Cron `sc_prune_logs` gallrar dagligen. Se [privacy.md](privacy.md).
+- Retention: **Log retention** under Security (standard 90 dagar, 7–730). Cron `signclave_sso_prune_logs` gallrar dagligen. Se [privacy.md](privacy.md).
 - Apache: `.htaccess` med `Require all denied` + `index.php`.
 - Nginx (lägg i server-block):
 

@@ -84,6 +84,6 @@ final class RateLimiter
     {
         $fingerprint = hash('sha256', strtolower($scope . '|' . $username . '|' . $ip));
 
-        return 'sc_' . $kind . '_' . substr($fingerprint, 0, 32);
+        return 'signclave_sso_' . $kind . '_' . substr($fingerprint, 0, 32);
     }
 }

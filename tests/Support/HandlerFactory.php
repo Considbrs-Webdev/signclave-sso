@@ -62,8 +62,8 @@ final class HandlerFactory
                 $stored[$section] = array_merge($stored[$section], $values);
             }
         }
-        OptionStore::seed(['sc_options' => $stored]);
-        update_option('sc_options', $stored);
+        OptionStore::seed(['signclave_sso_options' => $stored]);
+        update_option('signclave_sso_options', $stored);
     }
 
     public function make(): Handler

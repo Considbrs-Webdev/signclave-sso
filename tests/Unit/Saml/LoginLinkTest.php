@@ -13,7 +13,7 @@ it('shows a Log in with SSO button on wp-login when auto-SSO is off', function (
 
     expect($html)->toContain('sc-sso-login')
         ->and($html)->toContain('button-primary')
-        ->and($html)->toContain('sc_saml=login')
+        ->and($html)->toContain('signclave_sso_saml=login')
         ->and($html)->toContain('Log in with SSO');
 });
 
@@ -54,7 +54,7 @@ it('enqueues login styles and script when the SSO button is shown', function () 
     $factory->make()->enqueueLoginStyles();
 
     expect($GLOBALS['sc_test_inline_styles']['login'][0] ?? '')->toContain('.sc-sso-login')
-        ->and($GLOBALS['sc_test_inline_scripts']['sc-login-sso'][0] ?? '')->toContain('loginform');
+        ->and($GLOBALS['sc_test_inline_scripts']['signclave-sso-login'][0] ?? '')->toContain('loginform');
 });
 
 it('redirects wp-login to the IdP when auto-SSO is on', function () {
@@ -64,7 +64,7 @@ it('redirects wp-login to the IdP when auto-SSO is on', function () {
         $factory->make()->autoRedirectToSso();
         expect(false)->toBeTrue('Expected IdP redirect');
     } catch (Signclave\Tests\Support\RedirectException $e) {
-        expect($e->location)->toContain('sc_saml=login');
+        expect($e->location)->toContain('signclave_sso_saml=login');
     }
 });
 
@@ -88,7 +88,7 @@ it('does not auto-redirect an emergency password bypass request', function () {
         ],
     ]);
     $_GET['password'] = '1';
-    $_GET['sc_key'] = 'bypass-secret-key';
+    $_GET['signclave_sso_key'] = 'bypass-secret-key';
     $factory->make()->autoRedirectToSso();
     expect(true)->toBeTrue();
 });

@@ -21,7 +21,7 @@ function scPostFixture(string $name): void
 
 function scSeedRequest(string $id = '_req1'): void
 {
-    set_transient('sc_req_' . md5($id), 1, 300);
+    set_transient('signclave_sso_req_' . md5($id), 1, 300);
 }
 
 function scExpectReason(callable $run, AuthFailureReason $reason): void
@@ -178,7 +178,7 @@ it('rejects a pending request after its transient is gone', function () {
     $factory = new HandlerFactory();
     $factory->seedOptions();
     scSeedRequest();
-    delete_transient('sc_req_' . md5('_req1'));
+    delete_transient('signclave_sso_req_' . md5('_req1'));
     scPostFixture('valid-assertion.xml');
     scExpectReason(fn () => $factory->processAcs($factory->make()), AuthFailureReason::SubjectConfirmationInvalid);
 });
@@ -376,7 +376,7 @@ it('redirects ACS RelayState to the signed destination', function () {
 it('returns 405 when ACS is not POST', function () {
     $factory = new HandlerFactory();
     $factory->seedOptions();
-    $_GET['sc_saml'] = 'acs';
+    $_GET['signclave_sso_saml'] = 'acs';
     $_SERVER['REQUEST_METHOD'] = 'GET';
     try {
         $factory->make()->handleSamlRoutes();

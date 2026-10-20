@@ -52,7 +52,7 @@ it('rejects NameID elements that contain XML comments', function () {
 
 it('rejects oversized SAMLResponse before decoding', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => ['saml_response_max_bytes' => 100],
         ],
     ]);

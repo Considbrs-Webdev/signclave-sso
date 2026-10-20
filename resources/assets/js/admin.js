@@ -75,7 +75,7 @@ import '../scss/admin.scss';
 		data.append('password', password);
 		data.append('mode', mode || 'auth');
 
-		fetch(scAdmin.ajaxUrl, {
+		fetch(signclaveSsoAdmin.ajaxUrl, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: data.toString()
@@ -111,7 +111,7 @@ import '../scss/admin.scss';
 	}
 
 	function wireUserFilterByDirectoryType() {
-		var dirSelect = document.querySelector('select[name="sc_options[ldap][directory_type]"]');
+		var dirSelect = document.querySelector('select[name="signclave_sso_options[ldap][directory_type]"]');
 		var filterInput = byId('sc-user-filter');
 		var helper = byId('sc-user-filter-help');
 		if (!dirSelect || !filterInput || !helper) {
@@ -158,7 +158,7 @@ import '../scss/admin.scss';
 
 			function markCopied() {
 				var original = copyBtn.textContent;
-				copyBtn.textContent = (window.scAdmin && scAdmin.copied) ? scAdmin.copied : 'Copied';
+				copyBtn.textContent = (window.signclaveSsoAdmin && signclaveSsoAdmin.copied) ? signclaveSsoAdmin.copied : 'Copied';
 				window.setTimeout(function () {
 					copyBtn.textContent = original;
 				}, 1500);
@@ -188,19 +188,19 @@ import '../scss/admin.scss';
 
 		if (quickBtn) {
 			quickBtn.addEventListener('click', function () {
-				runTest('sc_test_ldap', scAdmin.ldapNonce, 'LDAP quick test', 'sc-ldap-quick-log', 'quick');
+				runTest('signclave_sso_test_ldap', signclaveSsoAdmin.ldapNonce, 'LDAP quick test', 'sc-ldap-quick-log', 'quick');
 			});
 		}
 
 		if (ldapBtn) {
 			ldapBtn.addEventListener('click', function () {
-				runTest('sc_test_ldap', scAdmin.ldapNonce, 'LDAP auth test', 'sc-tech-log', 'auth');
+				runTest('signclave_sso_test_ldap', signclaveSsoAdmin.ldapNonce, 'LDAP auth test', 'sc-tech-log', 'auth');
 			});
 		}
 
 		if (ssoBtn) {
 			ssoBtn.addEventListener('click', function () {
-				runTest('sc_test_sso', scAdmin.ssoNonce, 'SSO test', 'sc-tech-log', 'auth');
+				runTest('signclave_sso_test_sso', signclaveSsoAdmin.ssoNonce, 'SSO test', 'sc-tech-log', 'auth');
 			});
 		}
 

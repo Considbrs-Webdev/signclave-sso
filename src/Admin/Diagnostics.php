@@ -44,21 +44,21 @@ final class Diagnostics
      */
     public function registerHooks(): void
     {
-        add_action('wp_ajax_sc_test_ldap', [$this, 'testLdap']);
-        add_action('wp_ajax_sc_test_sso', [$this, 'testSso']);
+        add_action('wp_ajax_signclave_sso_test_ldap', [$this, 'testLdap']);
+        add_action('wp_ajax_signclave_sso_test_sso', [$this, 'testSso']);
     }
 
     /**
      * AJAX: validate LDAP connectivity, service bind, and optional user bind.
      *
-     * Expects POST fields: username, password, mode (`quick`|`auth`), and nonce `sc_test_ldap`.
+     * Expects POST fields: username, password, mode (`quick`|`auth`), and nonce `signclave_sso_test_ldap`.
      */
     public function testLdap(): void
     {
         if (!current_user_can('manage_options')) {
             wp_send_json_error(esc_html__('Unauthorized.', 'signclave-sso'));
         }
-        check_ajax_referer('sc_test_ldap');
+        check_ajax_referer('signclave_sso_test_ldap');
 
         $username = isset($_POST['username']) ? sanitize_text_field(wp_unslash((string) $_POST['username'])) : '';
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- diagnostic password must not pass sanitize_text_field.
@@ -221,14 +221,14 @@ final class Diagnostics
     /**
      * AJAX: validate outbound SAML AuthnRequest generation (does not exercise ACS).
      *
-     * Expects POST fields: username, password (ignored), and nonce `sc_test_sso`.
+     * Expects POST fields: username, password (ignored), and nonce `signclave_sso_test_sso`.
      */
     public function testSso(): void
     {
         if (!current_user_can('manage_options')) {
             wp_send_json_error(esc_html__('Unauthorized.', 'signclave-sso'));
         }
-        check_ajax_referer('sc_test_sso');
+        check_ajax_referer('signclave_sso_test_sso');
 
         $username = isset($_POST['username']) ? sanitize_text_field(wp_unslash((string) $_POST['username'])) : '';
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- diagnostic password must not pass sanitize_text_field.

@@ -7,7 +7,7 @@ use Signclave\Support\Logger;
 use Signclave\Tests\Support\OptionStore;
 
 it('redacts passwords assertions and secrets from log context', function () {
-    OptionStore::seed(['sc_options' => []]);
+    OptionStore::seed(['signclave_sso_options' => []]);
     $logger = new Logger(new Options());
     $method = new ReflectionMethod(Logger::class, 'sanitizeContext');
 

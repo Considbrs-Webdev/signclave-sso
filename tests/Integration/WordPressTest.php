@@ -31,7 +31,7 @@ it('round-trips settings through Options::sanitize', function () {
         new PasswordBypass($options, new RateLimiter($options)),
         new View()
     );
-    $_POST['option_page'] = 'sc';
+    $_POST['option_page'] = 'signclave_sso';
     $saved = $page->sanitizeOptions([
         'general' => [
             'auto_sso' => true,
@@ -43,7 +43,7 @@ it('round-trips settings through Options::sanitize', function () {
             'enabled' => true,
         ],
     ]);
-    update_option('sc_options', $saved);
+    update_option('signclave_sso_options', $saved);
     $read = (new Options())->getAll();
     expect($read['general']['saml_clock_skew_seconds'])->toBe(90)
         ->and($read['ldap']['hosts'])->toBe('ldaps://ldap.example.test:636');

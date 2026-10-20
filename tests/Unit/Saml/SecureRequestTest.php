@@ -30,7 +30,7 @@ beforeEach(function () {
 
 it('ignores X-Forwarded-Proto when trust_proxy_headers is off', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => ['trust_proxy_headers' => false],
         ],
     ]);
@@ -52,7 +52,7 @@ it('ignores X-Forwarded-Proto when trust_proxy_headers is off', function () {
 
 it('honours X-Forwarded-Proto when trust_proxy_headers is on', function () {
     OptionStore::seed([
-        'sc_options' => [
+        'signclave_sso_options' => [
             'general' => ['trust_proxy_headers' => true],
         ],
     ]);

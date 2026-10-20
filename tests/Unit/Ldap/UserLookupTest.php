@@ -21,7 +21,7 @@ function scLdapOptions(array $ldapOverrides = []): Options
     $stored['ldap']['bind_password_encrypted'] = $options->encryptSecret('bind-secret');
     $stored['ldap']['allow_insecure_ldap'] = false;
     $stored['ldap'] = array_merge($stored['ldap'], $ldapOverrides);
-    OptionStore::seed(['sc_options' => $stored]);
+    OptionStore::seed(['signclave_sso_options' => $stored]);
 
     return new Options();
 }

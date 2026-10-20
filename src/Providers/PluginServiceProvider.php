@@ -155,7 +155,7 @@ final class PluginServiceProvider implements ServiceProvider
         );
 
         add_action(
-            'sc_prune_logs',
+            'signclave_sso_prune_logs',
             static function () use ($logger, $container): void {
                 $options = $container->make(Options::class);
                 assert($options instanceof Options);
@@ -163,8 +163,9 @@ final class PluginServiceProvider implements ServiceProvider
             }
         );
         wp_clear_scheduled_hook('sls_prune_logs');
-        if (!wp_next_scheduled('sc_prune_logs')) {
-            wp_schedule_event(time(), 'daily', 'sc_prune_logs');
+        wp_clear_scheduled_hook('sc_prune_logs');
+        if (!wp_next_scheduled('signclave_sso_prune_logs')) {
+            wp_schedule_event(time(), 'daily', 'signclave_sso_prune_logs');
         }
 
         if (defined('WP_CLI') && WP_CLI) {

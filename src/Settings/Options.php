@@ -13,9 +13,9 @@ use Signclave\Saml\SignatureVerifier;
 use function Signclave\config;
 
 /**
- * Plugin options stored in sc_options. All writes go through sanitize().
+ * Plugin options stored in signclave_sso_options. All writes go through sanitize().
  *
- * Reads legacy sls_options until the first write, which stores sc_options and
+ * Reads legacy sls_options until the first write, which stores signclave_sso_options and
  * deletes the old key.
  */
 final class Options
@@ -26,7 +26,7 @@ final class Options
      */
     public function optionKey(): string
     {
-        return (string) config('app.option_key', 'sc_options');
+        return (string) config('app.option_key', 'signclave_sso_options');
     }
 
     /**
