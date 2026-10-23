@@ -6,6 +6,7 @@
 .distignore
 vendor/robrichards
 vendor/composer/autoload_aliases.php
+vendor/composer/tmp-*
 .infection-tmp
 .phpstan.cache
 .phpunit.cache

@@ -74,7 +74,7 @@ location ~* /wp-content/uploads/signclave-sso/ {
 - `src/Users/UserManager.php` — NameID-bindning, rollnedgradering.
 - `src/Support/Logger.php` — slumpade loggfiler och retention.
 - Personuppgifter i loggar: [privacy.md](privacy.md).
-- F5 APM: [f5-apm.md](f5-apm.md) och staging-checklista [f5-checklist.md](f5-checklist.md). Hotmodell: [threat-model.md](threat-model.md).
+- F5 APM och staging-kontroller: [f5-apm.md](f5-apm.md). Hotmodell: [threat-model.md](threat-model.md).
 
 ## 9) WP-CLI (när wp-admin är utelåst)
 

@@ -1119,7 +1119,12 @@ final class Handler
         echo '<input type="hidden" name="SAMLRequest" value="' . esc_attr($samlRequestB64) . '">';
         echo '<input type="hidden" name="RelayState" value="' . esc_attr($relay) . '">';
         echo '<noscript><p><button type="submit">' . esc_html__('Continue to sign in', 'signclave-sso') . '</button></p></noscript>';
-        echo '</form><script>document.getElementById("sc-saml-post").submit();</script></body></html>';
+        echo '</form>';
+        wp_register_script('signclave-sso-saml-post', false, [], (string) config('app.version'), false);
+        wp_enqueue_script('signclave-sso-saml-post');
+        wp_add_inline_script('signclave-sso-saml-post', 'document.getElementById("sc-saml-post").submit();');
+        wp_print_scripts('signclave-sso-saml-post');
+        echo '</body></html>';
         exit;
     }
 }

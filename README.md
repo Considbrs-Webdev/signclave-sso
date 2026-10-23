@@ -319,8 +319,7 @@ Settings live under **Settings → Signclave SSO** (`options-general.php?page=si
 | File | Contents |
 | --- | --- |
 | [`docs/instructions.md`](docs/instructions.md) | Swedish install, logs, WP-CLI, F5 |
-| [`docs/f5-apm.md`](docs/f5-apm.md) | F5 APM / eDirectory profile |
-| [`docs/f5-checklist.md`](docs/f5-checklist.md) | Staging checklist |
+| [`docs/f5-apm.md`](docs/f5-apm.md) | F5 APM / eDirectory profile and staging checks |
 | [`docs/threat-model.md`](docs/threat-model.md) | Threat model |
 | [`docs/privacy.md`](docs/privacy.md) | Logging and personal data |
 | `readme.txt` | wordpress.org metadata and changelog |

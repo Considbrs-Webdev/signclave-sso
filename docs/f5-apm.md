@@ -72,4 +72,18 @@ If ACS fails with `assertion_not_yet_valid` / `assertion_expired`, compare F5 an
 
 ## Staging
 
-See [f5-checklist.md](f5-checklist.md) for what is already known versus what still requires a staging round-trip. A captured F5 `SAMLResponse` is not in the test suite yet.
+Check these on a staging IdP and directory. Do not paste production hostnames, bind DNs, or certificates into git.
+
+1. SP metadata imported in F5 APM without warnings.
+2. IdP Entity ID, SSO URL, and signing certificate pasted into the plugin (staging values only).
+3. Login as a test user: a new WordPress user is created with the mapped role.
+4. Login as an existing WordPress user: no duplicate account.
+5. Email changed in the directory: same WordPress user, no new account.
+6. IdP-initiated SSO works when the setting is on, and is rejected when it is off.
+7. Compare F5 and web-server clocks. Raise **Clock skew** (max 300 seconds) only if ACS fails with `assertion_not_yet_valid` or `assertion_expired`.
+8. Certificate rotation with primary and secondary X.509 configured, without an outage.
+9. LDAP down: an existing user can sign in via SAML. A new user is rejected.
+10. Emergency local login works while SSO is on.
+11. `wp signclave sso disable` turns off the auto-redirect before it is needed in an incident.
+12. A wrong IdP certificate rejects login, and the audit log shows the reason.
+13. Behind a reverse proxy, HTTPS detection is correct with and without **Trust proxy HTTPS headers**.

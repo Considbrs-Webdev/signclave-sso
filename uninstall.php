@@ -24,19 +24,14 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 	global $wpdb;
 	if ( $wpdb instanceof wpdb ) {
-		$likes = array();
-		foreach ( array( 'signclave_sso_', 'sc_' ) as $prefix ) {
-			$likes[] = $wpdb->esc_like( '_transient_' . $prefix ) . '%';
-			$likes[] = $wpdb->esc_like( '_transient_timeout_' . $prefix ) . '%';
-		}
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- uninstall must drop all plugin transients.
+		$like_transient = $wpdb->esc_like( '_transient_signclave_sso_' ) . '%';
+		$like_timeout   = $wpdb->esc_like( '_transient_timeout_signclave_sso_' ) . '%';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- uninstall must drop this plugin's transients.
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s",
-				$likes[0],
-				$likes[1],
-				$likes[2],
-				$likes[3]
+				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+				$like_transient,
+				$like_timeout
 			)
 		);
 	}

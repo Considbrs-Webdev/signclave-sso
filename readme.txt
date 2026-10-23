@@ -1,5 +1,5 @@
 === Signclave – SSO for SAML and LDAP ===
-Contributors: considadam
+Contributors: considadam, considboras
 Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
@@ -79,7 +79,7 @@ From the WordPress root, with the plugin active: `wp signclave sso disable` turn
 
 = Where is the F5 / eDirectory profile documented? =
 
-`docs/f5-apm.md` and `docs/f5-checklist.md` ship with the plugin. The IdP SSO URL must be the **HTTP-POST** endpoint; the plugin does not send HTTP-Redirect AuthnRequests.
+`docs/f5-apm.md` ships with the plugin, including the staging checks. The IdP SSO URL must be the **HTTP-POST** endpoint; the plugin does not send HTTP-Redirect AuthnRequests.
 
 = Which filters are supported? =
 

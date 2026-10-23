@@ -442,6 +442,13 @@ if (! function_exists('wp_add_inline_script')) {
     }
 }
 
+if (! function_exists('wp_print_scripts')) {
+    function wp_print_scripts(string|array|false $handles = false): void
+    {
+        unset($handles);
+    }
+}
+
 if (! function_exists('do_action')) {
     function do_action(string $hook, mixed ...$args): void
     {
