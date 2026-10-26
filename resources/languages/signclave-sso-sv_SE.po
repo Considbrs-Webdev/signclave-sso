@@ -529,8 +529,8 @@ msgstr "Sparat LDAP bind-lösenord kunde inte dekrypteras. Det händer när säk
 
 #. Plugin URI of the plugin
 #: signclave-sso.php
-msgid "https://github.com/Considbrs-Webdev/saml-ldap-sso"
-msgstr "https://github.com/Considbrs-Webdev/saml-ldap-sso"
+msgid "https://github.com/Considbrs-Webdev/signclave-sso"
+msgstr "https://github.com/Considbrs-Webdev/signclave-sso"
 
 #. Author of the plugin
 #: signclave-sso.php

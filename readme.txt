@@ -1,5 +1,5 @@
 === Signclave – SSO for SAML and LDAP ===
-Contributors: considadam, considboras
+Contributors: considboras
 Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
@@ -14,7 +14,7 @@ Secure SAML 2.0 SP with optional LDAP, using pinned IdP certificates and prefixe
 
 WordPress SAML Service Provider with optional LDAP fallback.
 
-Source: https://github.com/Considbrs-Webdev/saml-ldap-sso
+Source: https://github.com/Considbrs-Webdev/signclave-sso
 
 Features:
 - SAML SSO redirect on `wp-login.php`

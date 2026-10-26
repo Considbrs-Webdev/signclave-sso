@@ -4,7 +4,7 @@ This plugin handles authentication. Please report vulnerabilities **privately**.
 
 ## How to report
 
-Report privately via **GitHub Security Advisories** on [Considbrs-Webdev/signclave-sso](https://github.com/Considbrs-Webdev/saml-ldap-sso/security/advisories/new).
+Report privately via **GitHub Security Advisories** on [Considbrs-Webdev/signclave-sso](https://github.com/Considbrs-Webdev/signclave-sso/security/advisories/new).
 
 After the plugin is listed on wordpress.org, you may also report to the **plugin author** (Consid Borås / considboras) through the plugin’s wordpress.org listing. The Plugins team provides a private channel for security reports. Do not use the public support forum or a public GitHub issue for unfixed issues.
 

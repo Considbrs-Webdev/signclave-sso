@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Signclave – SSO for SAML and LDAP
- * Plugin URI: https://github.com/Considbrs-Webdev/saml-ldap-sso
+ * Plugin URI: https://github.com/Considbrs-Webdev/signclave-sso
  * Description: Secure SAML SSO + LDAP authentication for WordPress.
  * Version: 1.0.0
  * Author: Consid Borås

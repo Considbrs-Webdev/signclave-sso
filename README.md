@@ -2,7 +2,7 @@
 
 A WordPress plugin that acts as a SAML 2.0 Service Provider with optional LDAP fallback. It redirects `wp-login.php` to your Identity Provider (for example F5 APM), validates signed assertions, binds accounts to NameID, and can map directory groups to WordPress roles.
 
-Author: [Consid Borås](https://profiles.wordpress.org/considboras/). Source: [github.com/Considbrs-Webdev/saml-ldap-sso](https://github.com/Considbrs-Webdev/saml-ldap-sso).
+Author: [Consid Borås](https://profiles.wordpress.org/considboras/). Source: [github.com/Considbrs-Webdev/signclave-sso](https://github.com/Considbrs-Webdev/signclave-sso).
 
 ## Table of Contents
 
@@ -94,7 +94,7 @@ Then upload the zip contents through wordpress.org SVN. Restore full Composer de
 
 No banner, icon, or screenshots in this round (skip SVN `assets/`).
 
-1. Log in as **considboras**. Add **considadam** as a plugin contributor.
+1. Log in as **considboras**.
 2. Submit the zip at [Add your plugin](https://wordpress.org/plugins/developers/add/) with slug `signclave-sso`.
 3. After approval, commit the unzipped plugin to `https://plugins.svn.wordpress.org/signclave-sso/` (`trunk/` plus tag `0.1.11`). Do not create GitHub Releases for the wordpress.org zip.
 4. Review typically takes two to four weeks and at least one round of feedback.

@@ -3,7 +3,7 @@
     "description": "Secure SAML SSO and LDAP authentication for WordPress",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
-    "homepage": "https://github.com/Considbrs-Webdev/saml-ldap-sso",
+    "homepage": "https://github.com/Considbrs-Webdev/signclave-sso",
     "require": {
         "php": ">=8.2",
         "ext-dom": "*",
