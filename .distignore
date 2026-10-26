@@ -2,8 +2,10 @@
 .github
 .gitignore
 .cursor
+.claude
 .DS_Store
 .distignore
+/.wordpress-org
 vendor/robrichards
 vendor/composer/autoload_aliases.php
 vendor/composer/tmp-*

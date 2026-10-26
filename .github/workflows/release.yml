@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.4']
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, ldap, openssl
+          coverage: none
+          tools: composer:v2
+        env:
+          COMPOSER_TOKEN: ""
+          GITHUB_TOKEN: ""
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies
+        env:
+          COMPOSER_AUTH: ""
+          COMPOSER_TOKEN: ""
+          GITHUB_TOKEN: ""
+        run: |
+          composer config --unset --global github-oauth.github.com || true
+          composer install --no-interaction --prefer-dist
+
+      - name: Audit dependencies
+        run: composer audit
+
+      - name: Unit and security tests
+        run: vendor/bin/pest --configuration=phpunit.xml.dist
+
+      - name: Type coverage
+        run: vendor/bin/pest --configuration=phpunit.xml.dist --type-coverage --min=100
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: dom, ldap, openssl
+          coverage: none
+          tools: composer:v2
+        env:
+          COMPOSER_TOKEN: ""
+          GITHUB_TOKEN: ""
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Build admin assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install production PHP dependencies
+        env:
+          COMPOSER_AUTH: ""
+          COMPOSER_TOKEN: ""
+          GITHUB_TOKEN: ""
+        run: |
+          composer config --unset --global github-oauth.github.com || true
+          composer install --no-dev --no-interaction --prefer-dist
+
+      - name: Deploy to WordPress.org
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: signclave-sso
+          ASSETS_DIR: .wordpress-org
