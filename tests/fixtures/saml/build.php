@@ -12,7 +12,6 @@ declare(strict_types=1);
  */
 
 require dirname(__DIR__, 3) . '/vendor/autoload.php';
-require dirname(__DIR__, 3) . '/vendor-prefixed/autoload.php';
 
 use Signclave\Vendor\RobRichards\XMLSecLibs\XMLSecurityDSig;
 use Signclave\Vendor\RobRichards\XMLSecLibs\XMLSecurityKey;

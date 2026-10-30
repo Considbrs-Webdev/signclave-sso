@@ -66,11 +66,6 @@ if ( file_exists( $pluginAutoloader ) ) {
 
 require_once $autoloader;
 
-$prefixedAutoloader = __DIR__ . '/vendor-prefixed/autoload.php';
-if (file_exists($prefixedAutoloader)) {
-	require_once $prefixedAutoloader;
-}
-
 require_once __DIR__ . '/helpers.php';
 
 // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
