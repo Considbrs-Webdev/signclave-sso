@@ -4,7 +4,7 @@ Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ These four filters are the public extension API (signatures will not change in p
 `signclave_sso_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
+
+= 1.0.3 =
+* Reject XML signatures that use an XPath transform or more than one reference, before signature cryptography runs.
 
 = 1.0.2 =
 * Directory banner and icon.
