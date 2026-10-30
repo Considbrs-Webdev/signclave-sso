@@ -37,3 +37,18 @@ SVN credentials live only as GitHub Actions secrets on `Considbrs-Webdev/signcla
 Never commit or paste those values. A tag push without the secrets can pass tests and fail deploy.
 
 Do not change a tag that is already on wordpress.org. Ship a new version as a new tag. Do not use the local checkout in `Documents/Wordpress.org/signclave-sso` for releases.
+
+A two-dot tag, including `1.1.0-beta.1`, matches `release.yml` and would publish to wordpress.org. A client beta is a zip only. Do not push a tag for it.
+
+## Dependency advisory
+
+Watch `robrichards/xmlseclibs`, `phpseclib/phpseclib`, and `paragonie/constant_time_encoding`. Dependabot opens separate pull requests for those runtime packages. Development Composer and npm updates are grouped so they do not sit ahead of them. `.github/workflows/composer-audit.yml` runs `composer audit` every Monday in addition to the audit step in CI.
+
+When an advisory arrives:
+
+1. Start from the Dependabot pull request. Do not merge it while CI is red.
+2. Run Pest, type coverage at 100, and PHPStan.
+3. Bump the plugin version with the version files above.
+4. Tag that commit and push the tag. Do not rewrite a tag that is already published.
+
+Strauss stays pinned at 0.22.2 until a trial of 0.31.1 on its own branch succeeds after 1.1.0. Do not switch the pin before that. 0.29.x breaks under `wp-content/plugins/`.
