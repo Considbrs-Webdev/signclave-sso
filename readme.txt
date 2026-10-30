@@ -4,11 +4,13 @@ Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.3
+Stable tag: 1.1.0-beta.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Secure SAML 2.0 SP with optional LDAP, using pinned IdP certificates and prefixed xmlseclibs.
+
+Third-party libraries shipped in prefixed form: robrichards/xmlseclibs (BSD-3-Clause), phpseclib/phpseclib (MIT), paragonie/constant_time_encoding (MIT). Their license files are included.
 
 == Description ==
 
@@ -93,6 +95,9 @@ These four filters are the public extension API (signatures will not change in p
 `signclave_sso_trust_proxy_headers` remains available for proxy HTTPS detection.
 
 == Changelog ==
+
+= 1.1.0-beta.1 =
+* Verify SAML signatures with xmlseclibs 4.0.1 and prefixed phpseclib. Beta zip for F5 testing, not a wordpress.org release.
 
 = 1.0.3 =
 * Reject XML signatures that use an XPath transform or more than one reference, before signature cryptography runs.
