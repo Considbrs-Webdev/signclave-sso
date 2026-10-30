@@ -43,6 +43,15 @@ final class SignatureVerifier
     ];
 
     /**
+     * Transforms a real SAML assertion signature uses. Anything else, including
+     * XPath filtering, is rejected before xmlseclibs evaluates it.
+     */
+    private const ALLOWED_TRANSFORMS = [
+        'http://www.w3.org/2000/09/xmldsig#enveloped-signature',
+        'http://www.w3.org/2001/10/xml-exc-c14n#',
+    ];
+
+    /**
      * Verify signed SAML XML against one or more pinned IdP certificates.
      *
      * @param string $xml      Raw SAML Response XML.
@@ -149,6 +158,11 @@ final class SignatureVerifier
             return VerificationResult::failure($algoError);
         }
 
+        $transformError = $this->rejectDisallowedTransforms($sigNode);
+        if ($transformError !== null) {
+            return VerificationResult::failure($transformError);
+        }
+
         $canonical = $objDSig->canonicalizeSignedInfo();
         if (!is_string($canonical) || '' === $canonical) {
             return VerificationResult::failure('SignedInfo canonicalization failed.');
@@ -239,6 +253,44 @@ final class SignatureVerifier
     }
 
     /**
+     * Reject XPath and any other transform before xmlseclibs runs it.
+     *
+     * One Reference per signature is enough for F5 and Keycloak. Extra
+     * references and unknown algorithms are rejected so validateReference()
+     * never evaluates attacker-controlled XPath.
+     */
+    private function rejectDisallowedTransforms(\DOMNode $sigNode): ?string
+    {
+        $doc = $sigNode->ownerDocument;
+        if ($doc === null) {
+            return 'Invalid signature node.';
+        }
+        $xpath = new DOMXPath($doc);
+        $xpath->registerNamespace('ds', XMLSecurityDSig::XMLDSIGNS);
+
+        $references = $xpath->query('./ds:SignedInfo/ds:Reference', $sigNode);
+        if (!$references instanceof \DOMNodeList || $references->length !== 1) {
+            return 'unsupported_transform';
+        }
+
+        $algorithms = $xpath->query(
+            './ds:SignedInfo/ds:Reference/ds:Transforms/ds:Transform/@Algorithm',
+            $sigNode
+        );
+        if (!$algorithms instanceof \DOMNodeList || $algorithms->length < 1) {
+            return 'unsupported_transform';
+        }
+        foreach ($algorithms as $attr) {
+            $algorithm = strtolower(trim((string) $attr->nodeValue));
+            if (!in_array($algorithm, self::ALLOWED_TRANSFORMS, true)) {
+                return 'unsupported_transform';
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return array{id:string,name:string}|null
      */
     private function resolveSignedAssertion(XMLSecurityDSig $objDSig): ?array
@@ -270,7 +322,9 @@ final class SignatureVerifier
 
     private function isFatalAlgorithmError(string $error): bool
     {
-        return 'sha1_rejected' === $error || str_starts_with($error, 'Unsupported');
+        return 'sha1_rejected' === $error
+            || 'unsupported_transform' === $error
+            || str_starts_with($error, 'Unsupported');
     }
 
     private function loadDom(string $xml): ?DOMDocument

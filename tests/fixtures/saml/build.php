@@ -122,7 +122,10 @@ XML;
 XML;
 }
 
-function signXml(string $xml, string $privateKey, string $signTarget, bool $sha1 = false): string
+/**
+ * @param list<string|array<string, array<string, string>>>|null $transforms
+ */
+function signXml(string $xml, string $privateKey, string $signTarget, bool $sha1 = false, ?array $transforms = null): string
 {
     $dom = new DOMDocument();
     $dom->preserveWhiteSpace = true;
@@ -148,7 +151,7 @@ function signXml(string $xml, string $privateKey, string $signTarget, bool $sha1
     $objDSig->addReference(
         $node,
         $digest,
-        ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', XMLSecurityDSig::EXC_C14N],
+        $transforms ?? ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', XMLSecurityDSig::EXC_C14N],
         ['id_name' => 'ID', 'overwrite' => false]
     );
 
@@ -200,6 +203,32 @@ $signedAssertion = signXml(buildResponse([]), $privateKey, 'assertion');
 writeFixture($dir, 'valid-assertion.xml', $signedAssertion);
 
 writeFixture($dir, 'sha1-assertion.xml', signXml(buildResponse([]), $privateKey, 'assertion', true));
+$extraReference = signXml(buildResponse([]), $privateKey, 'assertion');
+$extraDom = new DOMDocument();
+$extraDom->loadXML($extraReference);
+$extraXp = new DOMXPath($extraDom);
+$extraXp->registerNamespace('ds', 'http://www.w3.org/2000/09/xmldsig#');
+$firstReference = $extraXp->query('//ds:Reference')->item(0);
+if ($firstReference instanceof DOMElement && $firstReference->parentNode instanceof DOMElement) {
+    $firstReference->parentNode->appendChild($firstReference->cloneNode(true));
+}
+writeFixture($dir, 'extra-reference.xml', (string) $extraDom->saveXML());
+
+writeFixture($dir, 'xpath-transform.xml', signXml(
+    buildResponse([]),
+    $privateKey,
+    'assertion',
+    false,
+    [
+        'http://www.w3.org/2000/09/xmldsig#enveloped-signature',
+        [
+            'http://www.w3.org/TR/1999/REC-xpath-19991116' => [
+                'query' => 'count(//*) > 0',
+            ],
+        ],
+        XMLSecurityDSig::EXC_C14N,
+    ]
+));
 writeFixture($dir, 'response-only.xml', signXml(buildResponse([]), $privateKey, 'response'));
 writeFixture($dir, 'both-signed.xml', signXml(signXml(buildResponse([]), $privateKey, 'assertion'), $privateKey, 'response'));
 writeFixture($dir, 'signed-by-other.xml', signXml(buildResponse([]), $otherKey, 'assertion'));

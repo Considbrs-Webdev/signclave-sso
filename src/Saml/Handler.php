@@ -539,6 +539,9 @@ final class Handler
         if (str_contains($detail, 'unsigned_assertion')) {
             return AuthFailureReason::UnsignedAssertion;
         }
+        if (str_contains($detail, 'unsupported_transform')) {
+            return AuthFailureReason::UnsupportedTransform;
+        }
 
         return AuthFailureReason::SignatureValidationFailed;
     }

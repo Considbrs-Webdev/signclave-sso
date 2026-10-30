@@ -48,6 +48,7 @@ enum AuthFailureReason: string
     case LoginDenied = 'login_denied';
     case UnsignedAssertion = 'unsigned_assertion';
     case Sha1Rejected = 'sha1_rejected';
+    case UnsupportedTransform = 'unsupported_transform';
 
     case LdapInvalidUsername = 'sc_ldap_invalid_username';
     case LdapDisabled = 'sc_ldap_disabled';

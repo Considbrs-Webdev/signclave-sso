@@ -65,6 +65,29 @@ it('rejects SHA-1 algorithm downgrade', function () {
     expect($result->ok)->toBeFalse()->and($result->error)->toBe('sha1_rejected');
 });
 
+it('rejects more than one reference on a signature', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(scSecurityFixture('extra-reference.xml'), scSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeFalse()->and($result->error)->toBe('unsupported_transform');
+});
+
+it('rejects an XPath transform before signature cryptography', function () {
+    $result = (new SignatureVerifier())->verifySignedXml(scSecurityFixture('xpath-transform.xml'), scSecurityFixture('idp.crt'));
+    expect($result->ok)->toBeFalse()->and($result->error)->toBe('unsupported_transform');
+});
+
+it('rejects an XPath transform at ACS', function () {
+    $factory = new HandlerFactory();
+    $factory->seedOptions();
+    set_transient('signclave_sso_req_' . md5('_req1'), 1, 300);
+    $_POST['SAMLResponse'] = base64_encode(scSecurityFixture('xpath-transform.xml'));
+    try {
+        $factory->processAcs($factory->make());
+        expect(false)->toBeTrue('Expected InvalidAssertion');
+    } catch (Signclave\Exception\InvalidAssertion $e) {
+        expect($e->reason)->toBe(AuthFailureReason::UnsupportedTransform);
+    }
+});
+
 it('rejects XXE', function () {
     $result = (new SignatureVerifier())->verifySignedXml(scSecurityFixture('xxe.xml'), scSecurityFixture('idp.crt'));
     expect($result->ok)->toBeFalse();
