@@ -51,4 +51,4 @@ When an advisory arrives:
 3. Bump the plugin version with the version files above.
 4. Tag that commit and push the tag. Do not rewrite a tag that is already published.
 
-Strauss stays pinned at 0.22.2 until a trial of 0.31.1 on its own branch succeeds after 1.1.0. Do not switch the pin before that. 0.29.x breaks under `wp-content/plugins/`.
+Strauss stays pinned at 0.22.2 on the 1.1.0-beta.1 line. A trial of 0.31.1 on branch `strauss-0.31.1` (30 Oct 2026) prefixed the phpseclib RSA loader that 0.22.2 misses, and Pest passed (128 tests). Switch the pin only after 1.1.0 is tagged. Do not use 0.29.x; it breaks under `wp-content/plugins/`.
