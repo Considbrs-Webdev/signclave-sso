@@ -9,7 +9,7 @@
         "ext-dom": "*",
         "ext-ldap": "*",
         "ext-openssl": "*",
-        "robrichards/xmlseclibs": "^3.1.4"
+        "robrichards/xmlseclibs": "^4.0.1"
     },
     "require-dev": {
         "brain/monkey": "^2.6",
@@ -27,7 +27,9 @@
     "autoload": {
         "psr-4": {
             "Signclave\\": "src/",
-            "Signclave\\Vendor\\RobRichards\\XMLSecLibs\\": "vendor-prefixed/robrichards/xmlseclibs/src"
+            "Signclave\\Vendor\\RobRichards\\XMLSecLibs\\": "vendor-prefixed/robrichards/xmlseclibs/src",
+            "Signclave\\Vendor\\phpseclib3\\": "vendor-prefixed/phpseclib/phpseclib/phpseclib",
+            "Signclave\\Vendor\\ParagonIE\\ConstantTime\\": "vendor-prefixed/paragonie/constant_time_encoding/src"
         }
     },
     "autoload-dev": {
@@ -39,6 +41,7 @@
         "prefix-namespaces": [
             "sh -c 'test -f ./bin/strauss.phar || curl -fsSL -o bin/strauss.phar https://github.com/BrianHenryIE/strauss/releases/download/0.22.2/strauss.phar'",
             "sh -c 'COMPOSER_AUTH={} COMPOSER_TOKEN= GITHUB_TOKEN= php bin/strauss.phar'",
+            "@php bin/strauss-fixup.php",
             "@composer dump-autoload"
         ],
         "post-install-cmd": [
@@ -63,8 +66,16 @@
             "classmap_prefix": "Signclave_",
             "constant_prefix": "SC_",
             "packages": [
-                "robrichards/xmlseclibs"
+                "robrichards/xmlseclibs",
+                "phpseclib/phpseclib",
+                "paragonie/constant_time_encoding"
             ],
+            "exclude_from_copy": {
+                "packages": [
+                    "paragonie/random_compat"
+                ]
+            },
+            "classmap_output": false,
             "delete_vendor_packages": true,
             "delete_vendor_files": true,
             "exclude_git_files": false

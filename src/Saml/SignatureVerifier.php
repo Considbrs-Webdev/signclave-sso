@@ -163,49 +163,64 @@ final class SignatureVerifier
             return VerificationResult::failure($transformError);
         }
 
-        $canonical = $objDSig->canonicalizeSignedInfo();
-        if (!is_string($canonical) || '' === $canonical) {
-            return VerificationResult::failure('SignedInfo canonicalization failed.');
-        }
-
-        try {
-            $objDSig->validateReference();
-        } catch (Throwable $e) {
-            return VerificationResult::failure('Digest mismatch: ' . $e->getMessage());
-        }
-
-        $objKey = $objDSig->locateKey();
-        if ($objKey === null) {
-            return VerificationResult::failure('Unable to locate signature key algorithm.');
-        }
-
-        $algo = (string) ($objKey->type ?? '');
+        $algo = $this->signatureMethod($sigNode);
         if (!in_array($algo, self::ALLOWED_SIG_ALGOS, true)) {
-            if (in_array(strtolower($algo), array_map('strtolower', self::FORBIDDEN_SHA1), true)
-                || str_contains(strtolower($algo), 'sha1')
-            ) {
-                return VerificationResult::failure('sha1_rejected');
-            }
-
-            return VerificationResult::failure('Unsupported signature algorithm.');
+            return VerificationResult::failure('Unable to locate signature key algorithm.');
         }
 
         $pinnedKey = new XMLSecurityKey($algo, ['type' => 'public']);
         $pinnedKey->loadKey($certPem, false, true);
 
-        $verified = $objDSig->verify($pinnedKey);
-        if (1 !== $verified) {
-            return VerificationResult::failure(
-                -1 === $verified ? 'OpenSSL verify error.' : 'Signature verification failed.'
-            );
+        $objDSig->allowedSignatureAlgorithms = self::ALLOWED_SIG_ALGOS;
+        $objDSig->allowedDigestAlgorithms = self::ALLOWED_DIGEST_ALGOS;
+
+        try {
+            $validated = $objDSig->verifyDocument($pinnedKey, $dom, $pos);
+        } catch (Throwable $e) {
+            return VerificationResult::failure($this->verificationFailure($e));
         }
 
-        $signed = $this->resolveSignedAssertion($objDSig);
+        $signed = $this->resolveSignedAssertion($validated);
         if ($signed === null) {
             return VerificationResult::failure('unsigned_assertion');
         }
 
         return VerificationResult::success($dom, $signed['id'], $signed['name']);
+    }
+
+    private function signatureMethod(\DOMNode $sigNode): string
+    {
+        $doc = $sigNode->ownerDocument;
+        if ($doc === null) {
+            return '';
+        }
+        $xpath = new DOMXPath($doc);
+        $xpath->registerNamespace('ds', XMLSecurityDSig::XMLDSIGNS);
+
+        return (string) $xpath->evaluate('string(./ds:SignedInfo/ds:SignatureMethod/@Algorithm)', $sigNode);
+    }
+
+    /**
+     * Map a verifyDocument() exception to an error Handler::signatureFailureReason() understands.
+     */
+    private function verificationFailure(Throwable $e): string
+    {
+        $message = $e->getMessage();
+
+        if (str_contains($message, 'algorithm is not allowed') && str_contains(strtolower($message), 'sha1')) {
+            return 'sha1_rejected';
+        }
+        if (str_contains($message, 'Transform')) {
+            return 'unsupported_transform';
+        }
+        if (str_contains($message, 'no signed nodes were validated')) {
+            return 'unsigned_assertion';
+        }
+        if (str_contains($message, 'Reference')) {
+            return 'Digest mismatch: ' . $message;
+        }
+
+        return 'Signature verification failed.';
     }
 
     /**
@@ -291,15 +306,11 @@ final class SignatureVerifier
     }
 
     /**
+     * @param array<int|string, mixed> $validated Nodes returned by verifyDocument().
      * @return array{id:string,name:string}|null
      */
-    private function resolveSignedAssertion(XMLSecurityDSig $objDSig): ?array
+    private function resolveSignedAssertion(array $validated): ?array
     {
-        $validated = $objDSig->getValidatedNodes();
-        if (!is_array($validated) || $validated === []) {
-            return null;
-        }
-
         foreach ($validated as $id => $node) {
             if (!$node instanceof DOMElement) {
                 continue;

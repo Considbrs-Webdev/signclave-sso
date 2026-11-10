@@ -21,10 +21,6 @@ if (! is_readable($testsDir . '/includes/functions.php')) {
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-$prefixed = dirname(__DIR__) . '/vendor-prefixed/autoload.php';
-if (is_file($prefixed)) {
-    require $prefixed;
-}
 
 require $testsDir . '/includes/functions.php';
 

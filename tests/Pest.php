@@ -12,11 +12,6 @@ if (getenv('SC_INTEGRATION') === '1') {
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$prefixed = dirname(__DIR__) . '/vendor-prefixed/autoload.php';
-if (is_file($prefixed)) {
-    require $prefixed;
-}
-
 use Signclave\Tests\Support\OptionStore;
 use Signclave\Tests\Support\TransientStore;
 use Signclave\Tests\Support\UserStore;
