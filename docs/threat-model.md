@@ -23,7 +23,7 @@ Audience: a reviewer who needs to know what this plugin trusts and what it activ
 
 ## Defences
 
-- **xmlseclibs** (Strauss-prefixed) verifies Assertion signatures against pinned certs only
+- **xmlseclibs 4.0.1** (Strauss-prefixed, together with phpseclib and paragonie/constant_time_encoding) verifies Assertion signatures against a pinned key only
 - **NameID** stored in user meta; comment nodes in NameID/attribute text are rejected
 - **SHA-1 rejected**; RSA-SHA256+ only
 - **Size cap** on `SAMLResponse` before decode (default 256 KiB)

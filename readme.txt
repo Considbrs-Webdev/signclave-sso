@@ -4,7 +4,7 @@ Tags: sso, saml, ldap, single sign-on, active directory
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.1.0-beta.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,8 +96,8 @@ These four filters are the public extension API (signatures will not change in p
 
 == Changelog ==
 
-= 1.1.0-beta.1 =
-* Verify SAML signatures with xmlseclibs 4.0.1 and prefixed phpseclib. Beta zip for F5 testing, not a wordpress.org release.
+= 1.1.0 =
+* Verify SAML signatures with xmlseclibs 4.0.1, prefixed phpseclib, and constant-time encoding.
 
 = 1.0.3 =
 * Reject XML signatures that use an XPath transform or more than one reference, before signature cryptography runs.

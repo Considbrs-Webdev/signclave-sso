@@ -39,7 +39,7 @@ Author: [Consid Borås](https://profiles.wordpress.org/considboras/). Source: [g
    ```bash
    composer install --no-dev
    ```
-   `vendor/` and `vendor-prefixed/` are generated locally and are **not** in git. xmlseclibs is a runtime `require`; every install downloads `bin/strauss.phar` (gitignored, pinned 0.22.2) and copies xmlseclibs to `vendor-prefixed/`, deleting `vendor/robrichards`. Do not run `strauss include-autoloader`. Bump with `composer update robrichards/xmlseclibs`. Keep the phar pinned — 0.29.x fails under `wp-content/plugins/`.
+   `vendor/` and `vendor-prefixed/` are generated locally and are **not** in git. The runtime chain is xmlseclibs 4.0.1, phpseclib 3, and paragonie/constant_time_encoding. Every install downloads `bin/strauss.phar` (gitignored, pinned 0.22.2) and prefixes those three packages into `vendor-prefixed/`, then deletes the unprefixed copies from `vendor/`. `paragonie/random_compat` is an empty stub and is not copied. Do not run `strauss include-autoloader`. Keep the phar pinned — 0.29.x fails under `wp-content/plugins/`.
 3. Install Node dependencies (for development):
    ```bash
    npm install
@@ -193,7 +193,7 @@ Signclave uses a small, instance-based service container and four providers. The
 
 - **Application**: Bootstrap class that registers and boots service providers
 - **Container**: Instance DI; services are bound as factories and resolved by class name
-- **SAML**: AuthnRequest, ACS, metadata, XML-DSig via Strauss-prefixed xmlseclibs
+- **SAML**: AuthnRequest, ACS, metadata, XML-DSig via Strauss-prefixed xmlseclibs 4.0.1, with phpseclib and constant-time encoding prefixed beside it
 - **LDAP**: Optional fallback bind/search through `ClientInterface` (native `ldap_*` only in `NativeClient`)
 - **Users**: NameID binding, role mapping, last-admin and protected-login guards
 - **Auth**: Emergency local password bypass with rate limiting
@@ -299,7 +299,7 @@ signclave-sso/
 │   └── languages/             # POT / sv_SE
 ├── dist/                      # Built admin assets (checked in)
 ├── vendor/                    # Composer runtime (gitignored; generated)
-├── vendor-prefixed/           # Strauss-prefixed xmlseclibs (gitignored; generated)
+├── vendor-prefixed/           # Strauss-prefixed xmlseclibs, phpseclib, and constant-time encoding (gitignored; generated)
 ├── tests/                     # Pest Unit, Security, Integration, fixtures
 ├── docs/                      # Instructions, F5, threat model, privacy, roadmap (shipped in the zip)
 └── bin/                       # Strauss phar (gitignored), tests, plugin-check

@@ -45,7 +45,7 @@ Svensk driftguide. Utveckling, tester och zip-bygge står i [`README.md`](../REA
 - Bypass tillåter bara rena lokala WP-konton (inte `signclave_sso_source` saml/ldap).
 
 ## 6) Säkerhetsnoteringar
-- Signaturvalidering via xmlseclibs ≥ 3.1.4 (CVE-2025-66475-patchad), prefixad för att undvika krockar.
+- Signaturvalidering via xmlseclibs 4.0.1, med prefixad phpseclib och paragonie/constant_time_encoding.
 - SHA-1 avvisas. Endast RSA-SHA256+.
 - SAMLResponse max 256 KiB före parse.
 - Trust proxy HTTPS headers måste vara på för att X-Forwarded-* ska påverka cookie-secure.
@@ -67,8 +67,8 @@ location ~* /wp-content/uploads/signclave-sso/ {
 ```
 
 ## 8) Kodkarta
-- `signclave-sso.php` — dual Composer-autoload + `vendor-prefixed/`, `Application::boot()`.
-- `vendor-prefixed/` — Strauss-prefixad xmlseclibs (`Signclave\Vendor\…`).
+- `signclave-sso.php` — `vendor/autoload.php` laddar de prefixade namnrymderna, sedan `Application::boot()`.
+- `vendor-prefixed/` — Strauss-prefixad xmlseclibs 4.0.1, phpseclib och constant_time_encoding (`Signclave\Vendor\…`).
 - `src/Saml/SignatureVerifier.php` — XML-DSig via xmlseclibs mot pinnat cert.
 - `src/Saml/Handler.php` — ACS, NameID, protokollregler.
 - `src/Users/UserManager.php` — NameID-bindning, rollnedgradering.
